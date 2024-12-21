@@ -1,0 +1,19 @@
+@page
+@model ProjectsModel
+
+<div class="text-center">
+    <h1 class="display-4">Projects (@Model.Count)</h1>
+    <ul>
+        @foreach(var project in Model.Projects)
+        {
+            <li>
+                @project.Name &nbsp;
+                <a asp-page="Project" asp-route-projectId="@project.Id.ToString()">Open</a>
+            </li>
+        }
+        <li>
+            Test &nbsp;
+            <a asp-page="Project" asp-route-projectId="test">Open</a>
+        </li>
+    </ul>
+</div>
