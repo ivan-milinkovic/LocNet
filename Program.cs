@@ -2,6 +2,7 @@ using LocNet;
 using LocNet.Endpoints;
 using LocNet.DbModel;
 using LocNet.Exceptions;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,11 @@ builder.Services.Configure<IdentityOptions>(opt =>
     opt.Password.RequireNonAlphanumeric = false;
     opt.Password.RequiredLength = 4;
 });
+
+/* Neither option works
+builder.Services.AddAuthentication().AddBearerToken(opt => opt.BearerTokenExpiration = TimeSpan.FromSeconds(5));
+builder.Services.Configure<BearerTokenOptions>(opt => opt.BearerTokenExpiration = TimeSpan.FromSeconds(5));
+*/
 
 builder.Services.AddAuthorization();
 

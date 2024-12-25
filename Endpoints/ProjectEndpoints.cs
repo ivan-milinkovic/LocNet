@@ -15,6 +15,17 @@ public static class ProjectEndpoints
          MapProjectEntriesEndpoint(app);
          MapProjectEntriesGroupedByLocaleEndpoint(app);
          MapProjectEntriesForLocaleEndpoint(app);
+         MapUpdateEntryEndpoint(app);
+         MapCreateKeyEndpoint(app);
+         MapDeleteKeyEndpoint(app);
+    }
+    
+    private static string TryGetUserId(HttpContext context)
+    {
+        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId is null) 
+            throw new UserIdNotFoundException();
+        return userId;
     }
     
     private static void MapUserProjectsEndpoint(IEndpointRouteBuilder app)
@@ -41,7 +52,8 @@ public static class ProjectEndpoints
                     Id = e.Id,
                     Value = e.Value,
                     Key = e.Key?.Name ?? "",
-                    Locale = e.Locale?.Code ?? ""
+                    Locale = e.Locale?.Code ?? "",
+                    KeyId = e.KeyId
                 });
                 return entryDtos;
             })
@@ -62,7 +74,8 @@ public static class ProjectEndpoints
                         Id = e.Id,
                         Value = e.Value,
                         Key = e.Key?.Name ?? "",
-                        Locale = e.Locale?.Code ?? ""
+                        Locale = e.Locale?.Code ?? "",
+                        KeyId = e.KeyId
                     }));
                 return groupedDtos;
             })
@@ -82,7 +95,8 @@ public static class ProjectEndpoints
                     Id = e.Id,
                     Value = e.Value,
                     Key = e.Key?.Name ?? "",
-                    Locale = e.Locale?.Code ?? ""
+                    Locale = e.Locale?.Code ?? "",
+                    KeyId = e.KeyId
                 });
                 return TypedResults.Ok(entryDtos.ToList());
                 
@@ -90,11 +104,46 @@ public static class ProjectEndpoints
             .RequireAuthorization();
     }
 
-    private static string TryGetUserId(HttpContext context)
+    private static void MapUpdateEntryEndpoint(IEndpointRouteBuilder app)
     {
-        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId is null) 
-            throw new UserIdNotFoundException();
-        return userId;
+        app.MapPut("/projects/{projectId:guid}/entries",
+            async Task< Results<Ok<UpdateEntryDto>, NotFound> > 
+                (HttpContext context, LocService locService, [FromRoute] Guid projectId, [FromBody] UpdateEntryDto entryRequestDto) =>
+            {
+                var userId = TryGetUserId(context);
+                var entry = await locService.UpdateEntryAsync(userId, projectId, entryRequestDto.Id, entryRequestDto.Value);
+                if (entry is null)
+                    return TypedResults.NotFound();
+                
+                var entryResponseDto = new UpdateEntryDto()
+                {
+                    Id = entry.Id,
+                    Value = entry.Value
+                };
+                return TypedResults.Ok(entryResponseDto);
+            })
+            .RequireAuthorization();
+    }
+    
+    private static void MapCreateKeyEndpoint(IEndpointRouteBuilder app)
+    {
+        app.MapPost("/projects/{projectId:guid}/keys",
+            async (HttpContext context, LocService locService, [FromRoute] Guid projectId, [FromBody] CreateKeyDto keyRequestDto) =>
+            {
+                var userId = TryGetUserId(context);
+                await locService.CreateKeyAsync(userId, projectId, keyRequestDto.Name);
+            })
+            .RequireAuthorization();
+    }
+    
+    private static void MapDeleteKeyEndpoint(IEndpointRouteBuilder app)
+    {
+        app.MapDelete("/projects/{projectId:guid}/keys/{keyId:guid}",
+                async (HttpContext context, LocService locService, [FromRoute] Guid projectId, [FromRoute] Guid keyId) =>
+                {
+                    var userId = TryGetUserId(context);
+                    await locService.DeleteKeyAsync(userId, projectId, keyId);
+                })
+            .RequireAuthorization();
     }
 }

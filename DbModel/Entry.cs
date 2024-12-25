@@ -9,8 +9,8 @@ public class Entry
 {
     [Key]
     public required Guid Id { get; set; }
-
-    public string? Value { get; set; }
+    
+    public required string Value { get; set; }
 
     [ForeignKey(nameof(Key))]
     public required Guid KeyId { get; set; }
