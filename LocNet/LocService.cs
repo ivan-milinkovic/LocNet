@@ -43,6 +43,14 @@ public class LocService(LocDbContext db)
                 .AsSplitQuery();
         return await projectEntries.ToListAsync();
     }
+
+    public async Task<List<Locale>> GetProjectLocales(string userId, Guid projectId)
+    {
+        await TryValidateUserIsOnProjectAsync(userId, projectId);
+        var locales = _db.Locales
+            .Where(locale => locale.ProjectId == projectId);
+        return await locales.ToListAsync();
+    }
     
     public async Task<Dictionary<string, List<Entry>>> GetProjectEntriesGroupedByLocaleAsync(string userId, Guid projectId)
     {

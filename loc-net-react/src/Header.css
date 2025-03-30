@@ -1,0 +1,30 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    background-color: var(--primary-color);
+    color: black;
+    color: white;
+}
+
+.header-start {
+    flex-grow: 1;
+    align-content: center;
+    padding: 4px;
+}
+
+.header-mid {
+    flex-grow: 1;
+    align-content: center;
+    text-align: center;
+    padding: 4px;
+}
+
+.header-end {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 4px;
+}

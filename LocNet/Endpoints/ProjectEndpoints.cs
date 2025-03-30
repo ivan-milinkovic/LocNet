@@ -13,6 +13,7 @@ public static class ProjectEndpoints
     {
          MapUserProjectsEndpoint(app);
          MapProjectEntriesEndpoint(app);
+         MapProjectLocalesEndpoint(app);
          MapProjectEntriesGroupedByLocaleEndpoint(app);
          MapProjectEntriesForLocaleEndpoint(app);
          MapUpdateEntryEndpoint(app);
@@ -56,6 +57,19 @@ public static class ProjectEndpoints
                     KeyId = e.KeyId
                 });
                 return entryDtos;
+            })
+            .RequireAuthorization();
+    }
+
+    private static void MapProjectLocalesEndpoint(IEndpointRouteBuilder app)
+    {
+        app.MapGet("/projects/{projectId:guid}/locales",
+            async (HttpContext context, LocService locService, [FromRoute] Guid projectId) =>
+            {
+                var userId = TryGetUserId(context);
+                var locales = await locService.GetProjectLocales(userId, projectId);
+                var dtos = locales.Select(l => new LocaleDto() { Id = l.Id, Code = l.Code });
+                return dtos;
             })
             .RequireAuthorization();
     }
