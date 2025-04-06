@@ -1,7 +1,11 @@
-
 https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-one
 
-user1@test:1234
+```json
+{
+  "email": "user1@test",
+  "password": "1234"
+}
+```
 
 http://localhost:5297/swagger/index.html
 

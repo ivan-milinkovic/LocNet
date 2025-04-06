@@ -22,6 +22,13 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 }
 
+// builder.Services.AddOptions<BearerTokenOptions>(IdentityConstants.BearerScheme)
+// .Configure(opt =>
+// {
+//     opt.BearerTokenExpiration = TimeSpan.FromSeconds(5);
+//     opt.RefreshTokenExpiration = TimeSpan.FromSeconds(10);
+// });
+
 builder.Services
     .AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<LocDbContext>();
@@ -36,11 +43,6 @@ builder.Services.Configure<IdentityOptions>(opt =>
     opt.Password.RequireNonAlphanumeric = false;
     opt.Password.RequiredLength = 4;
 });
-
-/* Neither option works
-builder.Services.AddAuthentication().AddBearerToken(opt => opt.BearerTokenExpiration = TimeSpan.FromSeconds(5));
-builder.Services.Configure<BearerTokenOptions>(opt => opt.BearerTokenExpiration = TimeSpan.FromSeconds(5));
-*/
 
 builder.Services.AddAuthorization();
 
