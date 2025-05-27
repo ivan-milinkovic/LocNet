@@ -1,0 +1,66 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
+    "E-Mail" : {
+
+    },
+    "Key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
+          }
+        }
+      }
+    },
+    "Key:" : {
+
+    },
+    "Locales" : {
+
+    },
+    "LocNet" : {
+
+    },
+    "Log In" : {
+
+    },
+    "No" : {
+
+    },
+    "OK" : {
+
+    },
+    "Password" : {
+
+    },
+    "Really delete" : {
+
+    },
+    "Something went wrong" : {
+
+    },
+    "Value:" : {
+
+    },
+    "Yes" : {
+
+    }
+  },
+  "version" : "1.0"
+}
